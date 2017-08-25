@@ -26,13 +26,28 @@ type MVPTokenChaincode struct {
 
 // Init - конструктор
 func (t *MVPTokenChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
+	return shim.Success(nil)
+}
+
+// Invoke - вызовы методов
+func (t *MVPTokenChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
+	function, args := stub.GetFunctionAndParameters()
+
+	if function == "initializate" {
+		return t.initializate(stub, args)
+	}
+
+	return shim.Error("Invalid invoke function name.")
+}
+
+// Создание карточки объекта
+func (t *MVPTokenChaincode) initializate(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
 	result, err := stub.GetState("isInited")
 	if result != nil {
 		return shim.Error("Try to call Init more than once.")
 	}
 
-	_, args := stub.GetFunctionAndParameters()
 	/*
 			    uint64 initialSupply
 		        string tokenName
@@ -60,12 +75,6 @@ func (t *MVPTokenChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	}
 
 	return shim.Success(nil)
-}
-
-// Invoke - вызовы методов
-func (t *MVPTokenChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
-
-	return shim.Error("Invalid invoke function name.")
 }
 
 func main() {
