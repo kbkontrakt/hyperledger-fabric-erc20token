@@ -45,7 +45,7 @@ func (t *MVPTokenChaincode) initializate(stub shim.ChaincodeStubInterface, args 
 
 	result, err := stub.GetState("isInited")
 	if result != nil {
-		return shim.Error("Try to call Init more than once.")
+		return shim.Error("Try to initializate more than once.")
 	}
 
 	/*
@@ -62,8 +62,11 @@ func (t *MVPTokenChaincode) initializate(stub shim.ChaincodeStubInterface, args 
 		tokenSymbol := args[3]
 	*/
 	result, err = stub.GetCreator()
-
 	stub.PutState("creator", result)
+
+	result, err = stub.GetCallerCertificate()
+	stub.PutState("caller", result)
+
 	stub.PutState("initialSupply", []byte(args[0]))
 	stub.PutState("tokenName", []byte(args[1]))
 	stub.PutState("decimalUnits", []byte(args[2]))
