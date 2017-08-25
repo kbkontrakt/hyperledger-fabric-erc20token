@@ -64,9 +64,6 @@ func (t *MVPTokenChaincode) initializate(stub shim.ChaincodeStubInterface, args 
 	result, err = stub.GetCreator()
 	stub.PutState("creator", result)
 
-	result, err = stub.GetCallerCertificate()
-	stub.PutState("caller", result)
-
 	stub.PutState("initialSupply", []byte(args[0]))
 	stub.PutState("tokenName", []byte(args[1]))
 	stub.PutState("decimalUnits", []byte(args[2]))
@@ -77,7 +74,7 @@ func (t *MVPTokenChaincode) initializate(stub shim.ChaincodeStubInterface, args 
 		return shim.Error("PutState doesn't work")
 	}
 
-	return shim.Success(nil)
+	return shim.Success(result)
 }
 
 func main() {
